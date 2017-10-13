@@ -41,22 +41,23 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
-import org.eclipsecon.solution.ChamrousseDocumentModel.Route;
-import org.eclipsecon.solution.ChamrousseDocumentModel.VariableDefinition;
+import org.eclipsecon.solution.EclipseConMap;
+import org.eclipsecon.solution.EclipseConDocumentModel.Route;
+import org.eclipsecon.solution.EclipseConDocumentModel.VariableDefinition;
 
-public class ChamrousseTextDocumentService implements TextDocumentService {
+public class EclipseConTextDocumentService implements TextDocumentService {
 
-	private final Map<String, ChamrousseDocumentModel> docs = Collections.synchronizedMap(new HashMap<>());
-	private final ChamrousseLanguageServer chamrousseLanguageServer;
+	private final Map<String, EclipseConDocumentModel> docs = Collections.synchronizedMap(new HashMap<>());
+	private final EclipseConLanguageServer chamrousseLanguageServer;
 
-	public ChamrousseTextDocumentService(ChamrousseLanguageServer chamrousseLanguageServer) {
+	public EclipseConTextDocumentService(EclipseConLanguageServer chamrousseLanguageServer) {
 		this.chamrousseLanguageServer = chamrousseLanguageServer;
 	}
 	
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
 			TextDocumentPositionParams position) {
-		return CompletableFuture.supplyAsync(() -> Either.forLeft(ChamrousseMap.INSTANCE.all.stream()
+		return CompletableFuture.supplyAsync(() -> Either.forLeft(EclipseConMap.INSTANCE.all.stream()
 				.map(word -> {
 					CompletionItem item = new CompletionItem();
 					item.setLabel(word);
@@ -73,12 +74,12 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
 		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(position.getTextDocument().getUri());
+			EclipseConDocumentModel doc = docs.get(position.getTextDocument().getUri());
 			Hover res = new Hover();
 			res.setContents(doc.getResolvedRoutes().stream()
 				.filter(route -> route.line == position.getPosition().getLine())
 				.map(route -> route.name)
-				.map(ChamrousseMap.INSTANCE.type::get)
+				.map(EclipseConMap.INSTANCE.type::get)
 				.map(this::getHoverContent)
 				.collect(Collectors.toList()));
 			return res;
@@ -86,15 +87,6 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	}
 	
 	private Either<String, MarkedString> getHoverContent(String type) {
-		if ("Verte".equals(type)) {
-			return Either.forLeft("<font color='green'>Verte</font>");
-		} else if ("Bleue".equals(type)) {
-			return Either.forLeft("<font color='blue'>Bleue</font>");
-		} else if ("Rouge".equals(type)) {
-			return Either.forLeft("<font color='red'>Rouge</font>");
-		} else if ("Noire".equals(type)) {
-			return Either.forLeft("<font color='black'>Noire</font>");
-		}
 		return Either.forLeft(type);
 	}
 
@@ -106,7 +98,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams position) {
 		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(position.getTextDocument().getUri());
+			EclipseConDocumentModel doc = docs.get(position.getTextDocument().getUri());
 			String variable = doc.getVariable(position.getPosition().getLine(), position.getPosition().getCharacter()); 
 			if (variable != null) {
 				int variableLine = doc.getDefintionLine(variable);
@@ -126,7 +118,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(params.getTextDocument().getUri());
+			EclipseConDocumentModel doc = docs.get(params.getTextDocument().getUri());
 			String variable = doc.getVariable(params.getPosition().getLine(), params.getPosition().getCharacter()); 
 			if (variable != null) {
 				return doc.getResolvedRoutes().stream()
@@ -213,7 +205,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getTextDocument().getText());
+		EclipseConDocumentModel model = new EclipseConDocumentModel(params.getTextDocument().getText());
 		this.docs.put(params.getTextDocument().getUri(),
 				model);
 		CompletableFuture.runAsync(() ->
@@ -225,7 +217,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getContentChanges().get(0).getText());
+		EclipseConDocumentModel model = new EclipseConDocumentModel(params.getContentChanges().get(0).getText());
 		this.docs.put(params.getTextDocument().getUri(),
 				model);
 		// send notification
@@ -236,22 +228,22 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 		);
 	}
 
-	private List<Diagnostic> validate(ChamrousseDocumentModel model) {
+	private List<Diagnostic> validate(EclipseConDocumentModel model) {
 		List<Diagnostic> res = new ArrayList<>();
 		Route previousRoute = null;
 		for (Route route : model.getResolvedRoutes()) {
-			if (!ChamrousseMap.INSTANCE.all.contains(route.name)) {
+			if (!EclipseConMap.INSTANCE.all.contains(route.name)) {
 				Diagnostic diagnostic = new Diagnostic();
 				diagnostic.setSeverity(DiagnosticSeverity.Error);
-				diagnostic.setMessage("This route does not exist");
+				diagnostic.setMessage("This is not a Session");
 				diagnostic.setRange(new Range(
 						new Position(route.line, route.charOffset),
 						new Position(route.line, route.charOffset + route.text.length())));
 				res.add(diagnostic);
-			} else if (previousRoute != null && !ChamrousseMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
+			} else if (previousRoute != null && !EclipseConMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
 				Diagnostic diagnostic = new Diagnostic();
 				diagnostic.setSeverity(DiagnosticSeverity.Warning);
-				diagnostic.setMessage("There is no path from '" + previousRoute.name + "' to '" + route.name + "'");
+				diagnostic.setMessage("'" + route.name + "' does not follow '" + previousRoute.name + "'");
 				diagnostic.setRange(new Range(
 						new Position(route.line, route.charOffset),
 						new Position(route.line, route.charOffset + route.text.length())));

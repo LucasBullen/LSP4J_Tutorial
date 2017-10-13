@@ -24,7 +24,7 @@ public class ChamrousseMap {
 	final Map<String, String> type;
 	
 	private ChamrousseMap() {
-		InputStream propertiesStream = ChamrousseMap.class.getResourceAsStream("/" + ChamrousseMap.class.getPackage().getName().replace(".", "/") + "/chamrousseMap.properties");
+		InputStream propertiesStream = ChamrousseMap.class.getResourceAsStream("/" + ChamrousseMap.class.getPackage().getName().replace(".", "/") + "/EclipseConSessions.properties");
 		try {
 			props.load(propertiesStream);
 			propertiesStream.close();
@@ -36,7 +36,7 @@ public class ChamrousseMap {
 			.map(key -> ((String)key).split("\\.")[0])
 			.collect(Collectors.toSet());
 		this.startsFrom = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".startsFrom"))
+			.filter(entry -> ((String)entry.getKey()).endsWith(".isAfter"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> Arrays.asList(((String)entry.getValue()).split(","))));
@@ -52,7 +52,7 @@ public class ChamrousseMap {
 			});
 		});
 		this.type = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".type"))
+			.filter(entry -> ((String)entry.getKey()).endsWith(".difficulty"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> (String)entry.getValue()));

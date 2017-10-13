@@ -42,8 +42,6 @@ This is an interactive tutorial, if you are viewing this on GitHub, download the
 
 Ignore the `LSP4J_Tutorial/Exercises/X/src` and `LSP4J_Tutorial/Exercises/X/src/org/eclipsecon/exerciseX` projects.
 
-There will be **lots of errors**, these will be resolved as you work through the tutorials. However, to make it cleaner, feel free to close all the exercise projects **(Right click project > Close Project)** but the one you are currently working on.
-
 ***
 
 ## Introduction

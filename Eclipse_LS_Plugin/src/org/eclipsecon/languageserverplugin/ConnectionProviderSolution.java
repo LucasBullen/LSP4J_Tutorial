@@ -2,10 +2,10 @@ package org.eclipsecon.languageserverplugin;
 
 import java.io.IOException;
 
-import org.eclipsecon.solution.ChamrousseLanguageServer;
+import org.eclipsecon.solution.EclipseConLanguageServer;
 
 public class ConnectionProviderSolution extends AbstractConnectionProvider {
-	private static final ChamrousseLanguageServer TRAVEL_LANGUAGE_SERVER = new ChamrousseLanguageServer();
+	private static final EclipseConLanguageServer TRAVEL_LANGUAGE_SERVER = new EclipseConLanguageServer();
 	public ConnectionProviderSolution() {
 		super(TRAVEL_LANGUAGE_SERVER);
 	}
