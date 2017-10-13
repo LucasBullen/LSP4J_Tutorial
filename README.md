@@ -33,14 +33,16 @@ We will be using [The Eclipse IDE](https://www.eclipse.org/home/index.php) to wo
 
 This is an interactive tutorial, if you are viewing this on GitHub, download the project now to be able to follow along with the exercise. Within Eclipse use **File > Open Projects from File System** to import the required projects by setting the Import source to the `LSP4J_Tutorial` directory by using the **Directory...** button
 
- -[LSP4J_Tutorial/Eclipse_LS_Plugin](TODO)
- -[LSP4J_Tutorial/Exercises/solution](TODO)
- -[LSP4J_Tutorial/Exercises/1](TODO)
- -[LSP4J_Tutorial/Exercises/2](TODO)
- -[LSP4J_Tutorial/Exercises/3](TODO)
- -[LSP4J_Tutorial/Exercises/4](TODO)
+ - [LSP4J_Tutorial/Eclipse_LS_Plugin](TODO)
+ - [LSP4J_Tutorial/Exercises/solution](TODO)
+ - [LSP4J_Tutorial/Exercises/1](TODO)
+ - [LSP4J_Tutorial/Exercises/2](TODO)
+ - [LSP4J_Tutorial/Exercises/3](TODO)
+ - [LSP4J_Tutorial/Exercises/4](TODO)
 
 Ignore the `LSP4J_Tutorial/Exercises/X/src` and `LSP4J_Tutorial/Exercises/X/src/org/eclipsecon/exerciseX` projects.
+
+There will be **lots of errors**, these will be resolved as you work through the tutorials. However, to make it cleaner, feel free to close all the exercise projects **(Right click project > Close Project)** but the one you are currently working on.
 
 ***
 
@@ -59,9 +61,9 @@ In this tutorial, we are using [LSP4E](https://projects.eclipse.org/projects/tec
 Each exercise is contained in the `org.eclipsecon.lsp4jtutorial.exercises` package and each is its own Language Server that can be tested on it's own file type:
 
 - [1 - Setting up LSP4J](TODO)
-- [2 - Creating the Completion Assist Endpoint](TODO)
+- [2 - Creating an Endpoint](TODO)
 - [3 - Consuming the Document](TODO)
-- [4 - Performing Validation](TODO)
+- [4 - Sending Notifications](TODO)
 
 ***
 
@@ -76,8 +78,12 @@ Each exercise is contained in the `org.eclipsecon.lsp4jtutorial.exercises` packa
 
 ## Next Steps
 
+The Language Servers used in the previous exercises are all set up to be Eclipse plugins. In this repo there is a [template Language Server written in Java using LSP4E](TODO) made to be compiled to a jar and ran from any IDE. To set it up, follow the instructions found in its [README.md](TODO) file and begin work on your next LSP project!
+
+Other things that you can do to continue your LS involvment:
+
 - Work on an existing LS or LS client
-	- Here is a [list of existing language servers and clients](http://langserver.org/) (Bottom of page) most are open to PRs
+	- Here is a [list of existing language servers and clients](http://langserver.org/) (Bottom of page) as most are open to PRs
 
 - Develop your own
 	- There are tons more of file types and languages that currently do not have a LS, you can change that!
@@ -86,3 +92,7 @@ Each exercise is contained in the `org.eclipsecon.lsp4jtutorial.exercises` packa
 	- Such as [aCute](https://github.com/eclipse/aCute) (which is always looking for new committers), make a plug-in to add IDE specific features to compliment a LS
 
 > :fork_and_knife: Feel free to fork this repo and run your own tutorial!
+
+### Following this tutorial at EclipseCon 2017?
+
+![Sign in and evaluate this session at eclipsecon.org][leaveFeedback.png]

@@ -41,6 +41,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipsecon.exercise2.ChamrousseMap;
 import org.eclipsecon.exercise2.ChamrousseDocumentModel.Route;
 import org.eclipsecon.exercise2.ChamrousseDocumentModel.VariableDefinition;
 
@@ -56,13 +57,8 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
 			TextDocumentPositionParams position) {
-		return CompletableFuture.supplyAsync(() -> Either.forLeft(ChamrousseMap.INSTANCE.all.stream()
-				.map(word -> {
-					CompletionItem item = new CompletionItem();
-					item.setLabel(word);
-					item.setInsertText(word);
-					return item;
-				}).collect(Collectors.toList())));
+		/* Replace this return statement with one that returns a list of CompletionItems */
+		return null;
 	}
 
 	@Override
@@ -86,15 +82,6 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	}
 	
 	private Either<String, MarkedString> getHoverContent(String type) {
-		if ("Verte".equals(type)) {
-			return Either.forLeft("<font color='green'>Verte</font>");
-		} else if ("Bleue".equals(type)) {
-			return Either.forLeft("<font color='blue'>Bleue</font>");
-		} else if ("Rouge".equals(type)) {
-			return Either.forLeft("<font color='red'>Rouge</font>");
-		} else if ("Noire".equals(type)) {
-			return Either.forLeft("<font color='black'>Noire</font>");
-		}
 		return Either.forLeft(type);
 	}
 
@@ -243,7 +230,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 			if (!ChamrousseMap.INSTANCE.all.contains(route.name)) {
 				Diagnostic diagnostic = new Diagnostic();
 				diagnostic.setSeverity(DiagnosticSeverity.Error);
-				diagnostic.setMessage("This route does not exist");
+				diagnostic.setMessage("This is not a Session");
 				diagnostic.setRange(new Range(
 						new Position(route.line, route.charOffset),
 						new Position(route.line, route.charOffset + route.text.length())));
@@ -251,7 +238,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 			} else if (previousRoute != null && !ChamrousseMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
 				Diagnostic diagnostic = new Diagnostic();
 				diagnostic.setSeverity(DiagnosticSeverity.Warning);
-				diagnostic.setMessage("There is no path from '" + previousRoute.name + "' to '" + route.name + "'");
+				diagnostic.setMessage("'" + route.name + "' does not follow '" + previousRoute.name + "'");
 				diagnostic.setRange(new Range(
 						new Position(route.line, route.charOffset),
 						new Position(route.line, route.charOffset + route.text.length())));

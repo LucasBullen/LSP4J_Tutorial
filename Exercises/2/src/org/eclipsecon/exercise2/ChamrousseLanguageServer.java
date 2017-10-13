@@ -19,20 +19,23 @@ public class ChamrousseLanguageServer implements LanguageServer {
 	LanguageClient client;
 
 	public ChamrousseLanguageServer() {
+		/*Here the Text Document Server is initialized*/
 		textService = new ChamrousseTextDocumentService(this);
 		workspaceService = new ChamrousseWorkspaceService();
 	}
-	
+
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
 		final InitializeResult res = new InitializeResult(new ServerCapabilities());
 		res.getCapabilities().setCodeActionProvider(Boolean.TRUE);
-		res.getCapabilities().setCompletionProvider(new CompletionOptions());
 		res.getCapabilities().setDefinitionProvider(Boolean.TRUE);
 		res.getCapabilities().setHoverProvider(Boolean.TRUE);
 		res.getCapabilities().setReferencesProvider(Boolean.TRUE);
 		res.getCapabilities().setTextDocumentSync(TextDocumentSyncKind.Full);
 		res.getCapabilities().setDocumentSymbolProvider(Boolean.TRUE);
-		
+
+		/* Add the Completion Provider capability to the Initialize Result below*/
+
+
 		return CompletableFuture.supplyAsync(() -> res);
 	}
 
@@ -54,5 +57,5 @@ public class ChamrousseLanguageServer implements LanguageServer {
 	public void setRemoteProxy(LanguageClient remoteProxy) {
 		this.client = remoteProxy;
 	}
-	
+
 }

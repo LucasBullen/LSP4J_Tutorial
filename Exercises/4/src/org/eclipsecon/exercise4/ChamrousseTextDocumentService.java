@@ -28,11 +28,14 @@ import org.eclipse.lsp4j.DocumentSymbolParams;
 import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkedString;
+import org.eclipse.lsp4j.MessageParams;
+import org.eclipse.lsp4j.MessageType;
 import org.eclipse.lsp4j.Position;
 import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
+import org.eclipse.lsp4j.ShowMessageRequestParams;
 import org.eclipse.lsp4j.SignatureHelp;
 import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.SymbolKind;
@@ -41,6 +44,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipsecon.exercise4.ChamrousseMap;
 import org.eclipsecon.exercise4.ChamrousseDocumentModel.Route;
 import org.eclipsecon.exercise4.ChamrousseDocumentModel.VariableDefinition;
 
@@ -52,7 +56,51 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	public ChamrousseTextDocumentService(ChamrousseLanguageServer chamrousseLanguageServer) {
 		this.chamrousseLanguageServer = chamrousseLanguageServer;
 	}
-	
+
+	@Override
+	public void didOpen(DidOpenTextDocumentParams params) {
+		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getTextDocument().getText());
+		this.docs.put(params.getTextDocument().getUri(),
+				model);
+		/* Add the code to validate the document below */
+
+	}
+
+	@Override
+	public void didChange(DidChangeTextDocumentParams params) {
+		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getContentChanges().get(0).getText());
+		this.docs.put(params.getTextDocument().getUri(),
+				model);
+		/* Add the code to validate the document below */
+
+	}
+
+	private List<Diagnostic> validate(ChamrousseDocumentModel model) {
+		List<Diagnostic> res = new ArrayList<>();
+		Route previousRoute = null;
+		for (Route route : model.getResolvedRoutes()) {
+			if (!ChamrousseMap.INSTANCE.all.contains(route.name)) {
+				Diagnostic diagnostic = new Diagnostic();
+				diagnostic.setSeverity(DiagnosticSeverity.Error);
+				diagnostic.setMessage("This is not a Session");
+				diagnostic.setRange(new Range(
+						new Position(route.line, route.charOffset),
+						new Position(route.line, route.charOffset + route.text.length())));
+				res.add(diagnostic);
+			} else if (previousRoute != null && !ChamrousseMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
+				Diagnostic diagnostic = new Diagnostic();
+				diagnostic.setSeverity(DiagnosticSeverity.Warning);
+				diagnostic.setMessage("'" + route.name + "' does not follow '" + previousRoute.name + "'");
+				diagnostic.setRange(new Range(
+						new Position(route.line, route.charOffset),
+						new Position(route.line, route.charOffset + route.text.length())));
+				res.add(diagnostic);
+			}
+			previousRoute = route;
+		}
+		return res;
+	}
+
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
 			TextDocumentPositionParams position) {
@@ -209,57 +257,6 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
 		return null;
-	}
-
-	@Override
-	public void didOpen(DidOpenTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getTextDocument().getText());
-		this.docs.put(params.getTextDocument().getUri(),
-				model);
-		CompletableFuture.runAsync(() ->
-			chamrousseLanguageServer.client.publishDiagnostics(
-				new PublishDiagnosticsParams(params.getTextDocument().getUri(), validate(model))
-			)
-		);
-	}
-
-	@Override
-	public void didChange(DidChangeTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getContentChanges().get(0).getText());
-		this.docs.put(params.getTextDocument().getUri(),
-				model);
-		// send notification
-		CompletableFuture.runAsync(() ->
-			chamrousseLanguageServer.client.publishDiagnostics(
-				new PublishDiagnosticsParams(params.getTextDocument().getUri(), validate(model))
-			)
-		);
-	}
-
-	private List<Diagnostic> validate(ChamrousseDocumentModel model) {
-		List<Diagnostic> res = new ArrayList<>();
-		Route previousRoute = null;
-		for (Route route : model.getResolvedRoutes()) {
-			if (!ChamrousseMap.INSTANCE.all.contains(route.name)) {
-				Diagnostic diagnostic = new Diagnostic();
-				diagnostic.setSeverity(DiagnosticSeverity.Error);
-				diagnostic.setMessage("This route does not exist");
-				diagnostic.setRange(new Range(
-						new Position(route.line, route.charOffset),
-						new Position(route.line, route.charOffset + route.text.length())));
-				res.add(diagnostic);
-			} else if (previousRoute != null && !ChamrousseMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
-				Diagnostic diagnostic = new Diagnostic();
-				diagnostic.setSeverity(DiagnosticSeverity.Warning);
-				diagnostic.setMessage("There is no path from '" + previousRoute.name + "' to '" + route.name + "'");
-				diagnostic.setRange(new Range(
-						new Position(route.line, route.charOffset),
-						new Position(route.line, route.charOffset + route.text.length())));
-				res.add(diagnostic);
-			}
-			previousRoute = route;
-		}
-		return res;
 	}
 
 	@Override

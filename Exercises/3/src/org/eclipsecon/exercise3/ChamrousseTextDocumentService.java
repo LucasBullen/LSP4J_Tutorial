@@ -1,6 +1,5 @@
 package org.eclipsecon.exercise3;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -14,8 +13,6 @@ import org.eclipse.lsp4j.CodeLensParams;
 import org.eclipse.lsp4j.Command;
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.CompletionList;
-import org.eclipse.lsp4j.Diagnostic;
-import org.eclipse.lsp4j.DiagnosticSeverity;
 import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
@@ -29,7 +26,6 @@ import org.eclipse.lsp4j.Hover;
 import org.eclipse.lsp4j.Location;
 import org.eclipse.lsp4j.MarkedString;
 import org.eclipse.lsp4j.Position;
-import org.eclipse.lsp4j.PublishDiagnosticsParams;
 import org.eclipse.lsp4j.Range;
 import org.eclipse.lsp4j.ReferenceParams;
 import org.eclipse.lsp4j.RenameParams;
@@ -41,6 +37,7 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
+import org.eclipsecon.exercise3.ChamrousseMap;
 import org.eclipsecon.exercise3.ChamrousseDocumentModel.Route;
 import org.eclipsecon.exercise3.ChamrousseDocumentModel.VariableDefinition;
 
@@ -52,7 +49,34 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	public ChamrousseTextDocumentService(ChamrousseLanguageServer chamrousseLanguageServer) {
 		this.chamrousseLanguageServer = chamrousseLanguageServer;
 	}
-	
+
+	@Override
+	public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
+		/* Replace the following return statement with one that returns the hover information */
+		return null;
+	}
+
+	private Either<String, MarkedString> getHoverContent(String difficulty) {
+		return Either.forLeft(difficulty);
+	}
+
+	private Either<String, MarkedString> getCustomHoverContent(String difficulty) {
+		/* Replace the following return statement with one that returns a custom addition to the hover */
+		return null;
+	}
+
+	@Override
+	public void didOpen(DidOpenTextDocumentParams params) {
+		/*Create a EclipseCon Document Model from the text document and save it in the document map below*/
+
+	}
+
+	@Override
+	public void didChange(DidChangeTextDocumentParams params) {
+		/*Create a EclipseCon Document Model from the text document and save it in the document map below*/
+
+	}
+
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
 			TextDocumentPositionParams position) {
@@ -68,34 +92,6 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<CompletionItem> resolveCompletionItem(CompletionItem unresolved) {
 		return null;
-	}
-
-	@Override
-	public CompletableFuture<Hover> hover(TextDocumentPositionParams position) {
-		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(position.getTextDocument().getUri());
-			Hover res = new Hover();
-			res.setContents(doc.getResolvedRoutes().stream()
-				.filter(route -> route.line == position.getPosition().getLine())
-				.map(route -> route.name)
-				.map(ChamrousseMap.INSTANCE.type::get)
-				.map(this::getHoverContent)
-				.collect(Collectors.toList()));
-			return res;
-		});
-	}
-	
-	private Either<String, MarkedString> getHoverContent(String type) {
-		if ("Verte".equals(type)) {
-			return Either.forLeft("<font color='green'>Verte</font>");
-		} else if ("Bleue".equals(type)) {
-			return Either.forLeft("<font color='blue'>Bleue</font>");
-		} else if ("Rouge".equals(type)) {
-			return Either.forLeft("<font color='red'>Rouge</font>");
-		} else if ("Noire".equals(type)) {
-			return Either.forLeft("<font color='black'>Noire</font>");
-		}
-		return Either.forLeft(type);
 	}
 
 	@Override
@@ -209,57 +205,6 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<WorkspaceEdit> rename(RenameParams params) {
 		return null;
-	}
-
-	@Override
-	public void didOpen(DidOpenTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getTextDocument().getText());
-		this.docs.put(params.getTextDocument().getUri(),
-				model);
-		CompletableFuture.runAsync(() ->
-			chamrousseLanguageServer.client.publishDiagnostics(
-				new PublishDiagnosticsParams(params.getTextDocument().getUri(), validate(model))
-			)
-		);
-	}
-
-	@Override
-	public void didChange(DidChangeTextDocumentParams params) {
-		ChamrousseDocumentModel model = new ChamrousseDocumentModel(params.getContentChanges().get(0).getText());
-		this.docs.put(params.getTextDocument().getUri(),
-				model);
-		// send notification
-		CompletableFuture.runAsync(() ->
-			chamrousseLanguageServer.client.publishDiagnostics(
-				new PublishDiagnosticsParams(params.getTextDocument().getUri(), validate(model))
-			)
-		);
-	}
-
-	private List<Diagnostic> validate(ChamrousseDocumentModel model) {
-		List<Diagnostic> res = new ArrayList<>();
-		Route previousRoute = null;
-		for (Route route : model.getResolvedRoutes()) {
-			if (!ChamrousseMap.INSTANCE.all.contains(route.name)) {
-				Diagnostic diagnostic = new Diagnostic();
-				diagnostic.setSeverity(DiagnosticSeverity.Error);
-				diagnostic.setMessage("This route does not exist");
-				diagnostic.setRange(new Range(
-						new Position(route.line, route.charOffset),
-						new Position(route.line, route.charOffset + route.text.length())));
-				res.add(diagnostic);
-			} else if (previousRoute != null && !ChamrousseMap.INSTANCE.startsFrom(route.name, previousRoute.name)) {
-				Diagnostic diagnostic = new Diagnostic();
-				diagnostic.setSeverity(DiagnosticSeverity.Warning);
-				diagnostic.setMessage("There is no path from '" + previousRoute.name + "' to '" + route.name + "'");
-				diagnostic.setRange(new Range(
-						new Position(route.line, route.charOffset),
-						new Position(route.line, route.charOffset + route.text.length())));
-				res.add(diagnostic);
-			}
-			previousRoute = route;
-		}
-		return res;
 	}
 
 	@Override

@@ -31,6 +31,13 @@
             name="Exercise 4 Content Type (exer4.txt)"
             priority="normal">
       </content-type>
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-names="solution.txt"
+            id="org.eclipsecon.solution-contenttype"
+            name="Solution Content Type (solution.txt)"
+            priority="normal">
+      </content-type>
    </extension>
    <extension
          point="org.eclipse.lsp4e.languageServer">
@@ -70,6 +77,15 @@
             contentType="org.eclipsecon.exercise4-contenttype"
             id="org.eclipsecon.languageserverplugin.server4">
       </contentTypeMapping>
+      <server
+            class="org.eclipsecon.languageserverplugin.ConnectionProvider4"
+            id="org.eclipsecon.languageserverplugin.solutionserver"
+            label="Solution Server">
+      </server>
+      <contentTypeMapping
+            contentType="org.eclipsecon.solution-contenttype"
+            id="org.eclipsecon.languageserverplugin.solutionserver">
+      </contentTypeMapping>
    </extension>
    <extension
          point="org.eclipse.ui.editors">
@@ -87,6 +103,10 @@
       </editorContentTypeBinding>
       <editorContentTypeBinding
             contentTypeId="org.eclipsecon.exercise4-contenttype"
+            editorId="org.eclipse.ui.genericeditor.GenericEditor">
+      </editorContentTypeBinding>
+      <editorContentTypeBinding
+            contentTypeId="org.eclipsecon.solution-contenttype"
             editorId="org.eclipse.ui.genericeditor.GenericEditor">
       </editorContentTypeBinding>
    </extension>
