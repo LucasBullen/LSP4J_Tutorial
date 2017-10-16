@@ -76,7 +76,7 @@ Each exercise is contained in the `org.eclipsecon.lsp4jtutorial.exercises` packa
 
 ## Next Steps
 
-The Language Servers used in the previous exercises are all set up to be Eclipse plugins. In this repo there is a [template Language Server written in Java using LSP4E](/Template LSP4J Language Server/) made to be compiled to a jar and ran from any IDE. To set it up, follow the instructions found in its [README.md](/Template LSP4J Language Server/README.md) file and begin work on your next LSP project!
+The Language Servers used in the previous exercises are all set up to be Eclipse plugins. In this repo there is a [template Language Server written in Java using LSP4E](/Template-LSP4J-Language-Server/) made to be compiled to a jar and ran from any IDE. To set it up, follow the instructions found in its [README.md](/Template-LSP4J-Language-Server/README.md) file and begin work on your next LSP project!
 
 Other things that you can do to continue your LS involvment:
 
