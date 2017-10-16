@@ -92,5 +92,4 @@ Other things that you can do to continue your LS involvment:
 > :fork_and_knife: Feel free to fork this repo and run your own tutorial!
 
 ### Following this tutorial at EclipseCon 2017?
-
-![Sign in and evaluate this session at eclipsecon.org][leaveFeedback.png]
+<img src="https://github.com/LucasBullen/LSP4J_Tutorial/blob/master/leaveFeedback.png" width="400">
