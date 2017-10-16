@@ -37,17 +37,17 @@ import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.WorkspaceEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
-import org.eclipsecon.exercise3.ChamrousseMap;
-import org.eclipsecon.exercise3.ChamrousseDocumentModel.Route;
-import org.eclipsecon.exercise3.ChamrousseDocumentModel.VariableDefinition;
+import org.eclipsecon.exercise3.EclipseConMap;
+import org.eclipsecon.exercise3.EclipseConDocumentModel.Route;
+import org.eclipsecon.exercise3.EclipseConDocumentModel.VariableDefinition;
 
-public class ChamrousseTextDocumentService implements TextDocumentService {
+public class EclipseConTextDocumentService implements TextDocumentService {
 
-	private final Map<String, ChamrousseDocumentModel> docs = Collections.synchronizedMap(new HashMap<>());
-	private final ChamrousseLanguageServer chamrousseLanguageServer;
+	private final Map<String, EclipseConDocumentModel> docs = Collections.synchronizedMap(new HashMap<>());
+	private final EclipseConLanguageServer eclipseConLanguageServer;
 
-	public ChamrousseTextDocumentService(ChamrousseLanguageServer chamrousseLanguageServer) {
-		this.chamrousseLanguageServer = chamrousseLanguageServer;
+	public EclipseConTextDocumentService(EclipseConLanguageServer eclipseConLanguageServer) {
+		this.eclipseConLanguageServer = eclipseConLanguageServer;
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(
 			TextDocumentPositionParams position) {
-		return CompletableFuture.supplyAsync(() -> Either.forLeft(ChamrousseMap.INSTANCE.all.stream()
+		return CompletableFuture.supplyAsync(() -> Either.forLeft(EclipseConMap.INSTANCE.all.stream()
 				.map(word -> {
 					CompletionItem item = new CompletionItem();
 					item.setLabel(word);
@@ -102,7 +102,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<List<? extends Location>> definition(TextDocumentPositionParams position) {
 		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(position.getTextDocument().getUri());
+			EclipseConDocumentModel doc = docs.get(position.getTextDocument().getUri());
 			String variable = doc.getVariable(position.getPosition().getLine(), position.getPosition().getCharacter()); 
 			if (variable != null) {
 				int variableLine = doc.getDefintionLine(variable);
@@ -122,7 +122,7 @@ public class ChamrousseTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<List<? extends Location>> references(ReferenceParams params) {
 		return CompletableFuture.supplyAsync(() -> {
-			ChamrousseDocumentModel doc = docs.get(params.getTextDocument().getUri());
+			EclipseConDocumentModel doc = docs.get(params.getTextDocument().getUri());
 			String variable = doc.getVariable(params.getPosition().getLine(), params.getPosition().getCharacter()); 
 			if (variable != null) {
 				return doc.getResolvedRoutes().stream()

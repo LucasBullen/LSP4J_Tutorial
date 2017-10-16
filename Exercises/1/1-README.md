@@ -12,7 +12,7 @@ In this exercise, we will complete the Exercise1 Project with the required conne
 
 ## MANIFEST.MF
 
-Start by opening the [MANIFEST.MF](TODO) file. Here we will add the dependencies of the project and the exported package; which will be the LS for our plug-ins to consume.
+Start by opening the [MANIFEST.MF](/Exercises/1/META-INF/MANIFEST.MF) file. Here we will add the dependencies of the project and the exported package; which will be the LS for our plug-ins to consume.
 
 ### Dependencies
 
@@ -32,13 +32,13 @@ To allow other packages to use our Language Server, we must export the package. 
 
 ## Main.java
 
-Within [Main.java](TODO), we will be creating an instance of the server, launching it with the program's standard input and output to receive and send messages, set the server's client, and begin waiting for messages.
+Within [Main.java](/Exercises/1/src/org/eclipsecon/exercise1/Main.java), we will be creating an instance of the server, launching it with the program's standard input and output to receive and send messages, set the server's client, and begin waiting for messages.
 
 In the `startServer` function, do the following:
 
 Create an instance of the Language Server, which implements `lsp4j.services.LanguageServer`:
 ```
-ChamrousseLanguageServer server = new ChamrousseLanguageServer();
+EclipseConLanguageServer server = new EclipseConLanguageServer();
 ```
 
 Use the `Launcher` to start the server with the program's standard input and output:
@@ -71,4 +71,4 @@ Now that the EclipseCon 2017 Language Server has been setup (We will go over how
 
 ### Congratulations! You have set up a Language Server in Java!
 
-[To next lesson](TODO)
+[To next lesson](/Exercises/2/2-README.md)

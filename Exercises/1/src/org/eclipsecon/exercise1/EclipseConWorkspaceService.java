@@ -1,4 +1,4 @@
-package org.eclipsecon.exercise2;
+package org.eclipsecon.exercise1;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -9,7 +9,7 @@ import org.eclipse.lsp4j.SymbolInformation;
 import org.eclipse.lsp4j.WorkspaceSymbolParams;
 import org.eclipse.lsp4j.services.WorkspaceService;
 
-public class ChamrousseWorkspaceService implements WorkspaceService {
+public class EclipseConWorkspaceService implements WorkspaceService {
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> symbol(WorkspaceSymbolParams params) {

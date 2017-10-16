@@ -1,4 +1,4 @@
-package org.eclipsecon.exercise4;
+package org.eclipsecon.exercise1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-public class ChamrousseDocumentModel {
+public class EclipseConDocumentModel {
 
 	public static abstract class DocumentLine {
 		final int line;
@@ -51,7 +51,7 @@ public class ChamrousseDocumentModel {
 	private final List<Route> routes = new ArrayList<>();
 	private final Map<String, VariableDefinition> variables = new HashMap<>();
 	
-	public ChamrousseDocumentModel(String text) {
+	public EclipseConDocumentModel(String text) {
 		try (
 			Reader r = new StringReader(text);
 			BufferedReader reader = new BufferedReader(r);

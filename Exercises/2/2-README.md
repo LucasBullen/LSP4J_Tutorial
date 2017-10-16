@@ -15,15 +15,15 @@ Add the completion provider capability to the initialize result so that the clie
 res.getCapabilities().setCompletionProvider(new CompletionOptions());
 ```
 
-## ChamrousseTextDocumentService.java
+## EclipseConTextDocumentService.java
 
-In the [ChamrousseLanguageServer.java](TODO)'s constructor, you will see an instance of [ChamrousseTextDocumentService.java](TODO) being created. This class contains all the functions that accept requests from the client and form the responses.
+In [EclipseConLanguageServer](/Exercises/2/src/org/eclipsecon/exercise2/EclipseConLanguageServer.java)'s constructor, you will see an instance of [EclipseConTextDocumentService](/Exercises/2/src/org/eclipsecon/exercise2/EclipseConTextDocumentService.java) being created. This class contains all the functions that accept requests from the client and form the responses.
 
 We will be working in the `completion` function. This function takes the position that the request for completion was made within the target document, and returns a list of `CompletionItem`s or a `CompletionList`.
 
 The code below takes a stream of all the sessions at EclipseCon, creates `CompletionItem`s for each, then collects them into a list to be returned. This code is added in replacement of the current `return null;` line in the `completion` function in the solution LS:
 ```
-return CompletableFuture.supplyAsync(() -> Either.forLeft(ChamrousseMap.INSTANCE.all.stream()
+return CompletableFuture.supplyAsync(() -> Either.forLeft(EclipseConMap.INSTANCE.all.stream()
 	.map(word -> {
 		CompletionItem item = new CompletionItem();
 		item.setLabel(word);
@@ -54,4 +54,4 @@ With our new made completion assist endpoint, let's see it in action:
 
 ### Congratulations! You have created an endpoint for a Language Server in Java!
 
-[To next lesson](TODO)
+[To next lesson](/Exercises/3/3-README.md)

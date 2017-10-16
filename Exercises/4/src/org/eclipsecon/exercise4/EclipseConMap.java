@@ -1,4 +1,4 @@
-package org.eclipsecon.exercise1;
+package org.eclipsecon.exercise4;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +13,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ChamrousseMap {
+public class EclipseConMap {
 
-	public static final ChamrousseMap INSTANCE = new ChamrousseMap();
+	public static final EclipseConMap INSTANCE = new EclipseConMap();
 	
 	final Properties props = new Properties();
 	final Set<String> all;
@@ -23,8 +23,8 @@ public class ChamrousseMap {
 	final Map<String, Collection<String>> arrivesTo;
 	final Map<String, String> type;
 	
-	private ChamrousseMap() {
-		InputStream propertiesStream = ChamrousseMap.class.getResourceAsStream("/" + ChamrousseMap.class.getPackage().getName().replace(".", "/") + "/EclipseConSessions.properties");
+	private EclipseConMap() {
+		InputStream propertiesStream = EclipseConMap.class.getResourceAsStream("/" + EclipseConMap.class.getPackage().getName().replace(".", "/") + "/chamrousseMap.properties");
 		try {
 			props.load(propertiesStream);
 			propertiesStream.close();
@@ -36,7 +36,7 @@ public class ChamrousseMap {
 			.map(key -> ((String)key).split("\\.")[0])
 			.collect(Collectors.toSet());
 		this.startsFrom = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".isAfter"))
+			.filter(entry -> ((String)entry.getKey()).endsWith(".startsFrom"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> Arrays.asList(((String)entry.getValue()).split(","))));
@@ -52,7 +52,7 @@ public class ChamrousseMap {
 			});
 		});
 		this.type = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".difficulty"))
+			.filter(entry -> ((String)entry.getKey()).endsWith(".type"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> (String)entry.getValue()));

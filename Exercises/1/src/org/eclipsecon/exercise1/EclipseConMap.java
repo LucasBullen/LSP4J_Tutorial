@@ -1,4 +1,4 @@
-package org.eclipsecon.exercise3;
+package org.eclipsecon.exercise1;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,9 +13,9 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ChamrousseMap {
+public class EclipseConMap {
 
-	public static final ChamrousseMap INSTANCE = new ChamrousseMap();
+	public static final EclipseConMap INSTANCE = new EclipseConMap();
 	
 	final Properties props = new Properties();
 	final Set<String> all;
@@ -23,8 +23,8 @@ public class ChamrousseMap {
 	final Map<String, Collection<String>> arrivesTo;
 	final Map<String, String> type;
 	
-	private ChamrousseMap() {
-		InputStream propertiesStream = ChamrousseMap.class.getResourceAsStream("/" + ChamrousseMap.class.getPackage().getName().replace(".", "/") + "/chamrousseMap.properties");
+	private EclipseConMap() {
+		InputStream propertiesStream = EclipseConMap.class.getResourceAsStream("/" + EclipseConMap.class.getPackage().getName().replace(".", "/") + "/chamrousseMap.properties");
 		try {
 			props.load(propertiesStream);
 			propertiesStream.close();
