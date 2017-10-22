@@ -78,7 +78,7 @@
             id="org.eclipsecon.languageserverplugin.server4">
       </contentTypeMapping>
       <server
-            class="org.eclipsecon.languageserverplugin.ConnectionProvider4"
+            class="org.eclipsecon.languageserverplugin.ConnectionProviderSolution"
             id="org.eclipsecon.languageserverplugin.solutionserver"
             label="Solution Server">
       </server>

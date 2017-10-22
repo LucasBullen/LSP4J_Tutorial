@@ -154,6 +154,9 @@ public class EclipseConTextDocumentService implements TextDocumentService {
 
 	@Override
 	public CompletableFuture<List<? extends SymbolInformation>> documentSymbol(DocumentSymbolParams params) {
+		EclipseConDocumentModel model = docs.get(params.getTextDocument().getUri());
+		if(model == null)
+			return null;
 		return CompletableFuture.supplyAsync(() -> 
 			docs.get(params.getTextDocument().getUri()).getResolvedLines().stream().map(line -> {
 				SymbolInformation symbol = new SymbolInformation();

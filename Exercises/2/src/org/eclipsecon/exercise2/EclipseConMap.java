@@ -19,12 +19,12 @@ public class EclipseConMap {
 	
 	final Properties props = new Properties();
 	final Set<String> all;
-	final Map<String, Collection<String>> startsFrom;
-	final Map<String, Collection<String>> arrivesTo;
+	final Map<String, Collection<String>> isAfter;
+	final Map<String, Collection<String>> isFollowedBy;
 	final Map<String, String> type;
 	
 	private EclipseConMap() {
-		InputStream propertiesStream = EclipseConMap.class.getResourceAsStream("/" + EclipseConMap.class.getPackage().getName().replace(".", "/") + "/chamrousseMap.properties");
+		InputStream propertiesStream = EclipseConMap.class.getResourceAsStream("/" + EclipseConMap.class.getPackage().getName().replace(".", "/") + "/EclipseConSessions.properties");
 		try {
 			props.load(propertiesStream);
 			propertiesStream.close();
@@ -35,24 +35,24 @@ public class EclipseConMap {
 		this.all = props.keySet().stream()
 			.map(key -> ((String)key).split("\\.")[0])
 			.collect(Collectors.toSet());
-		this.startsFrom = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".startsFrom"))
+		this.isAfter = props.entrySet().stream()
+			.filter(entry -> ((String)entry.getKey()).endsWith(".isAfter"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> Arrays.asList(((String)entry.getValue()).split(","))));
-		this.arrivesTo = new HashMap<String, Collection<String>>();
-		this.startsFrom.forEach((arrival, starts) -> {
+		this.isFollowedBy = new HashMap<String, Collection<String>>();
+		this.isAfter.forEach((arrival, starts) -> {
 			starts.stream().forEach(start -> {
-				Collection<String> arrivals = arrivesTo.get(start);
+				Collection<String> arrivals = isFollowedBy.get(start);
 				if (arrivals == null) {
 					arrivals = new HashSet<>();
 				}
 				arrivals.add(arrival);
-				arrivesTo.put(start, arrivals);
+				isFollowedBy.put(start, arrivals);
 			});
 		});
 		this.type = props.entrySet().stream()
-			.filter(entry -> ((String)entry.getKey()).endsWith(".type"))
+			.filter(entry -> ((String)entry.getKey()).endsWith(".difficulty"))
 			.collect(Collectors.toMap(
 					entry -> ((String)entry.getKey()).split("\\.")[0],
 					entry -> (String)entry.getValue()));
@@ -64,8 +64,8 @@ public class EclipseConMap {
 	public List<String> findWaysBetween(String from, String to) {
 		List<String> res = new ArrayList<String>();
 		for (String way : all) {
-			if (startsFrom.get(way) != null && startsFrom.get(way).contains(from) &&
-				arrivesTo.get(way) != null && arrivesTo.get(way).contains(to)) {
+			if (isAfter.get(way) != null && isAfter.get(way).contains(from) &&
+					isFollowedBy.get(way) != null && isFollowedBy.get(way).contains(to)) {
 				res.add(way);
 			}
 		}
@@ -73,6 +73,6 @@ public class EclipseConMap {
 	}
 	
 	public boolean startsFrom(String route, String potentialStart) {
-		return this.startsFrom.get(route) != null && this.startsFrom.get(route).contains(potentialStart);
+		return this.isAfter.get(route) != null && this.isAfter.get(route).contains(potentialStart);
 	}
 }
