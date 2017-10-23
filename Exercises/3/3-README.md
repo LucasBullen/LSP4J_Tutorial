@@ -54,7 +54,7 @@ if ("Beginner".equals(difficulty)) {
 } else if ("Advanced".equals(difficulty)) {
 	return Either.forLeft("<font color='red'>Advanced</font>");
 }
-return Either.forLeft(type);
+return Either.forLeft(difficulty);
 ```
 
 And then within the `hover` function replace `.map(this::getHoverContent)` with `.map(this::getCustomHoverContent)`.
