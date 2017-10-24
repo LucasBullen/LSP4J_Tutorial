@@ -1,4 +1,4 @@
-package org.eclipsecon.template;
+package org.eclipsecon.languageserver;
 
 import java.io.InputStream;
 import java.io.OutputStream;

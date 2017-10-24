@@ -1,4 +1,4 @@
-package org.eclipsecon.template;
+package org.eclipsecon.languageserver;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -6,6 +6,7 @@ import org.eclipse.lsp4j.CompletionOptions;
 import org.eclipse.lsp4j.InitializeParams;
 import org.eclipse.lsp4j.InitializeResult;
 import org.eclipse.lsp4j.ServerCapabilities;
+import org.eclipse.lsp4j.TextDocumentSyncKind;
 import org.eclipse.lsp4j.services.LanguageClient;
 import org.eclipse.lsp4j.services.LanguageServer;
 import org.eclipse.lsp4j.services.TextDocumentService;
@@ -13,8 +14,8 @@ import org.eclipse.lsp4j.services.WorkspaceService;
 
 public class TemplateLanguageServer implements LanguageServer {
 
-	private TemplateTextDocumentService textService;
-	private TemplateWorkspaceService workspaceService;
+	private TextDocumentService textService;
+	private WorkspaceService workspaceService;
 	LanguageClient client;
 
 	public TemplateLanguageServer() {
@@ -24,8 +25,14 @@ public class TemplateLanguageServer implements LanguageServer {
 	
 	public CompletableFuture<InitializeResult> initialize(InitializeParams params) {
 		final InitializeResult res = new InitializeResult(new ServerCapabilities());
+		res.getCapabilities().setCodeActionProvider(Boolean.TRUE);
 		res.getCapabilities().setCompletionProvider(new CompletionOptions());
-
+		res.getCapabilities().setDefinitionProvider(Boolean.TRUE);
+		res.getCapabilities().setHoverProvider(Boolean.TRUE);
+		res.getCapabilities().setReferencesProvider(Boolean.TRUE);
+		res.getCapabilities().setTextDocumentSync(TextDocumentSyncKind.Full);
+		res.getCapabilities().setDocumentSymbolProvider(Boolean.TRUE);
+		
 		return CompletableFuture.supplyAsync(() -> res);
 	}
 

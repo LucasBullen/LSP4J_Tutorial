@@ -1,4 +1,4 @@
-package org.eclipsecon.template;
+package org.eclipsecon.languageserver;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

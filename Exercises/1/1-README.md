@@ -18,11 +18,11 @@ Start by opening the [MANIFEST.MF](/Exercises/1/META-INF/MANIFEST.MF) file. Here
 
 Either in the **Dependencies** tab or with the **Require-Bundle** tag, add the following two packages:
 
-**`org.eclipse.lsp4j`** Version 0.3.0
+**`org.eclipse.lsp4j`** Version 0.2.0
 
 This package includes the interface for implementations of the LSP, `lsp4j.services.LanguageServer`, and all the request, parameter, and response formats for the messages sent between the server and client.
 
-**`org.eclipse.lsp4j.jsonrpc`** Version 0.3.0
+**`org.eclipse.lsp4j.jsonrpc`** Version 0.2.0
 
 We use only one class from this package: `Launcher` which is the entry point for applications that use LSP4J. A `Launcher` does all the wiring that is necessary to connect your endpoint via an input stream and an output stream.
 

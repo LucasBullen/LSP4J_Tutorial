@@ -1,9 +1,8 @@
-package org.eclipsecon.template;
+package org.eclipsecon.languageserver;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-
 import org.eclipse.lsp4j.CodeActionParams;
 import org.eclipse.lsp4j.CodeLens;
 import org.eclipse.lsp4j.CodeLensParams;
@@ -33,7 +32,8 @@ import org.eclipse.lsp4j.services.TextDocumentService;
 
 public class TemplateTextDocumentService implements TextDocumentService {
 
-	public TemplateTextDocumentService(TemplateLanguageServer languageServer) {
+
+	public TemplateTextDocumentService(TemplateLanguageServer templateLanguageServer) {
 	}
 	
 	@Override
@@ -116,10 +116,12 @@ public class TemplateTextDocumentService implements TextDocumentService {
 
 	@Override
 	public void didOpen(DidOpenTextDocumentParams params) {
+		
 	}
 
 	@Override
 	public void didChange(DidChangeTextDocumentParams params) {
+		
 	}
 
 	@Override
@@ -129,4 +131,5 @@ public class TemplateTextDocumentService implements TextDocumentService {
 	@Override
 	public void didSave(DidSaveTextDocumentParams params) {
 	}
+
 }
