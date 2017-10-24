@@ -5,8 +5,8 @@ Bundle-SymbolicName: org.eclipsecon.languageserverplugin;singleton:=true
 Bundle-Version: 1.0.0
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Require-Bundle: org.eclipse.core.contenttype;bundle-version="3.6.0",
- org.eclipse.lsp4j;bundle-version="0.3.0",
- org.eclipse.lsp4j.jsonrpc;bundle-version="0.3.0",
+ org.eclipse.lsp4j;bundle-version="0.2.0",
+ org.eclipse.lsp4j.jsonrpc;bundle-version="0.2.0",
  org.eclipse.lsp4e;bundle-version="0.4.0",
  org.eclipse.ui;bundle-version="3.109.0",
  org.eclipse.core.runtime;bundle-version="3.13.0",
